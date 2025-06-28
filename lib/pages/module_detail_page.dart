@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import '../services/api_service.dart';
 import '../widgets/base_page.dart';
 
@@ -22,7 +23,7 @@ class _ModuleDetailsPageState extends State<ModuleDetailsPage> {
 
   Future<void> fetchModuleDetails() async {
     try {
-      final data = await ApiService.getModuleById(widget.moduleId);
+      final data = await ApiService.getModuleById(widget.moduleId.toString());
       setState(() {
         module = data;
       });
@@ -50,7 +51,24 @@ class _ModuleDetailsPageState extends State<ModuleDetailsPage> {
           isLoading
               ? const Center(child: CircularProgressIndicator())
               : module == null
-              ? const Center(child: Text('Módulo não encontrado.'))
+              ? Center(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Lottie.asset(
+                      'assets/animations/animation_not_found.json',
+                      width: 300,
+                      height: 300,
+                      fit: BoxFit.fill,
+                    ),
+                    const Text(
+                      'Módulo não encontrado',
+                      style: TextStyle(fontSize: 25, color: Colors.deepPurple),
+                    ),
+                  ],
+                ),
+              )
               : Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(

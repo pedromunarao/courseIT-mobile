@@ -12,7 +12,6 @@ class WelcomePage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const SizedBox(height: 40),
               const Text(
                 'Seja Bem-Vindo!',
                 style: TextStyle(
@@ -21,11 +20,10 @@ class WelcomePage extends StatelessWidget {
                   color: Colors.black87,
                 ),
               ),
-              const SizedBox(height: 40),
               Image.asset(
                 'assets/logo.png',
-                width: 200,
-                height: 200,
+                width: 300,
+                height: 300,
                 fit: BoxFit.contain,
               ),
               const SizedBox(height: 40),

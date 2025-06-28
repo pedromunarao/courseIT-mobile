@@ -11,6 +11,7 @@ import 'package:courseit/pages/progress_page.dart';
 import 'package:courseit/pages/register_page.dart';
 import 'package:courseit/pages/welcome_page.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
@@ -25,9 +26,9 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case '/courses':
       return MaterialPageRoute(builder: (_) => const CoursesPage());
     case '/course-details':
-      final courseId = settings.arguments as int;
+      final String courseId = settings.arguments.toString();
       return MaterialPageRoute(
-        builder: (_) => CourseDetailsPage(courseId: courseId),
+        builder: (_) => CourseDetailsPage(courseId: courseId.toString()),
       );
     case '/module-details':
       final moduleId = settings.arguments as int;
@@ -52,7 +53,24 @@ Route<dynamic> generateRoute(RouteSettings settings) {
         builder:
             (_) => Scaffold(
               appBar: AppBar(),
-              body: const Center(child: Text('Rota não encontrada')),
+              body: Center(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Lottie.asset(
+                      'assets/animations/animation_not_found.json',
+                      width: 300,
+                      height: 300,
+                      fit: BoxFit.fill,
+                    ),
+                    const Text(
+                      'Rota não encontrado',
+                      style: TextStyle(fontSize: 25, color: Colors.deepPurple),
+                    ),
+                  ],
+                ),
+              ),
             ),
       );
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import '../services/api_service.dart';
 import '../services/auth_service.dart';
 import '../widgets/base_page.dart';
@@ -24,7 +25,7 @@ class _LessonDetailsPageState extends State<LessonDetailsPage> {
 
   Future<void> fetchLesson() async {
     try {
-      final data = await ApiService.getLessonById(widget.lessonId);
+      final data = await ApiService.getLessonById(widget.lessonId.toString());
       setState(() {
         lesson = data;
       });
@@ -73,7 +74,24 @@ class _LessonDetailsPageState extends State<LessonDetailsPage> {
           isLoading
               ? const Center(child: CircularProgressIndicator())
               : lesson == null
-              ? const Center(child: Text('Aula não encontrada.'))
+              ? Center(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Lottie.asset(
+                      'assets/animations/animation_not_found.json',
+                      width: 300,
+                      height: 300,
+                      fit: BoxFit.fill,
+                    ),
+                    const Text(
+                      'Aula não encontrada',
+                      style: TextStyle(fontSize: 25, color: Colors.deepPurple),
+                    ),
+                  ],
+                ),
+              )
               : Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(

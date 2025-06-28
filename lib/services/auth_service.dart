@@ -19,4 +19,5 @@ class AuthService {
   static Map<String, dynamic>? get user => _user;
 
   static bool get isLoggedIn => _token != null;
+  static bool get isUserAdmin => _user != null && _user!['role'] == 'ADMIN';
 }

@@ -15,6 +15,7 @@ class ApiService {
     final headers = {'Content-Type': 'application/json'};
     if (authenticated) {
       final token = AuthService.getToken();
+      print("token\: $token, authorization: $authenticated");
       if (token != null) {
         headers['Authorization'] = 'Bearer $token';
       }
@@ -37,6 +38,7 @@ class ApiService {
     String path, {
     bool authenticated = false,
   }) async {
+    print("path: $path / authenticated: $authenticated");
     final res = await http.get(
       Uri.parse('$_baseUrl$path'),
       headers: await _getHeaders(authenticated: authenticated),
@@ -92,6 +94,7 @@ class ApiService {
 
   static List<dynamic> _handleListResponse(http.Response response) {
     final decoded = jsonDecode(response.body);
+    print("decoded: $decoded / responsebody: ${response.body}");
     if (response.statusCode >= 200 && response.statusCode < 300) {
       return decoded;
     } else {
@@ -130,17 +133,17 @@ class ApiService {
   // ---------------------------
 
   static Future<List<dynamic>> getAllCourses() async {
-    return await _getList('/courses');
+    return await _getList('/courses', authenticated: true);
   }
 
-  static Future<Map<String, dynamic>> getCourseById(int courseId) async {
+  static Future<Map<String, dynamic>> getCourseById(String courseId) async {
     return await _get('/courses/$courseId');
   }
 
   static Future<Map<String, dynamic>> createCourse(
     String title,
     String description,
-    int authorId,
+    String authorId,
   ) async {
     return await _post('/courses', {
       'title': title,
@@ -150,7 +153,7 @@ class ApiService {
   }
 
   static Future<Map<String, dynamic>> updateCourse(
-    int courseId, {
+    String courseId, {
     String? title,
     String? description,
   }) async {
@@ -160,7 +163,7 @@ class ApiService {
     }, authenticated: true);
   }
 
-  static Future<Map<String, dynamic>> deleteCourse(int courseId) async {
+  static Future<Map<String, dynamic>> deleteCourse(String courseId) async {
     return await _delete('/courses/$courseId', authenticated: true);
   }
 
@@ -170,7 +173,7 @@ class ApiService {
 
   static Future<Map<String, dynamic>> createModule(
     String title,
-    int courseId,
+    String courseId,
   ) async {
     return await _post('/modules', {
       'title': title,
@@ -178,12 +181,12 @@ class ApiService {
     }, authenticated: true);
   }
 
-  static Future<Map<String, dynamic>> getModuleById(int moduleId) async {
+  static Future<Map<String, dynamic>> getModuleById(String moduleId) async {
     return await _get('/modules/$moduleId');
   }
 
   static Future<Map<String, dynamic>> updateModule(
-    int moduleId, {
+    String moduleId, {
     String? title,
   }) async {
     return await _put('/modules/$moduleId', {
@@ -191,7 +194,7 @@ class ApiService {
     }, authenticated: true);
   }
 
-  static Future<Map<String, dynamic>> deleteModule(int moduleId) async {
+  static Future<Map<String, dynamic>> deleteModule(String moduleId) async {
     return await _delete('/modules/$moduleId', authenticated: true);
   }
 
@@ -215,12 +218,12 @@ class ApiService {
     }, authenticated: true);
   }
 
-  static Future<Map<String, dynamic>> getLessonById(int lessonId) async {
+  static Future<Map<String, dynamic>> getLessonById(String lessonId) async {
     return await _get('/lessons/$lessonId');
   }
 
   static Future<Map<String, dynamic>> updateLesson(
-    int lessonId, {
+    String lessonId, {
     String? title,
     String? content,
     String? videoUrl,
@@ -232,7 +235,7 @@ class ApiService {
     }, authenticated: true);
   }
 
-  static Future<Map<String, dynamic>> deleteLesson(int lessonId) async {
+  static Future<Map<String, dynamic>> deleteLesson(String lessonId) async {
     return await _delete('/lessons/$lessonId', authenticated: true);
   }
 
@@ -241,8 +244,8 @@ class ApiService {
   // ---------------------------
 
   static Future<Map<String, dynamic>> enrollUser(
-    int userId,
-    int courseId,
+    String userId,
+    String courseId,
   ) async {
     return await _post('/enrollments', {
       'userId': userId,
@@ -250,7 +253,7 @@ class ApiService {
     }, authenticated: true);
   }
 
-  static Future<List<dynamic>> getUserEnrollments(int userId) async {
+  static Future<List<dynamic>> getUserEnrollments(String userId) async {
     return await _getList('/users/$userId/enrollments', authenticated: true);
   }
 
@@ -264,7 +267,7 @@ class ApiService {
     return await _post('/progress', progress, authenticated: true);
   }
 
-  static Future<List<dynamic>> getUserProgress(int userId) async {
+  static Future<List<dynamic>> getUserProgress(String userId) async {
     return await _getList('/progress/$userId', authenticated: true);
   }
 }

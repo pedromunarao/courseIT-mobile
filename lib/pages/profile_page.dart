@@ -1,5 +1,6 @@
 import 'package:courseit/widgets/base_page.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import '../services/api_service.dart';
 import '../services/auth_service.dart';
 
@@ -50,24 +51,34 @@ class _ProfilePageState extends State<ProfilePage> {
       currentIndex: 2,
       child:
           user == null
-              ? const Center(child: Text('Usuário não encontrado.'))
+              ? Center(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Lottie.asset(
+                      'assets/animations/animation_not_found.json',
+                      width: 300,
+                      height: 300,
+                      fit: BoxFit.fill,
+                    ),
+                    const Text(
+                      'Usuário não encontrado',
+                      style: TextStyle(fontSize: 25, color: Colors.deepPurple),
+                    ),
+                  ],
+                ),
+              )
               : SingleChildScrollView(
-                padding: const EdgeInsets.all(24),
+                padding: const EdgeInsets.only(left: 24, right: 24),
                 child: Column(
                   children: [
-                    // Avatar
-                    const CircleAvatar(
-                      radius: 50,
-                      backgroundColor: Colors.deepPurple,
-                      child: const Icon(
-                        Icons.person,
-                        size: 50,
-                        color: Colors.white,
-                      ),
+                    Lottie.asset(
+                      'assets/animations/animation_user.json',
+                      width: 300,
+                      height: 300,
+                      fit: BoxFit.fill,
                     ),
-                    const SizedBox(height: 24),
-
-                    // Card de dados
                     Card(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -76,7 +87,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 16,
-                          vertical: 24,
+                          vertical: 16,
                         ),
                         child: Column(
                           children: [

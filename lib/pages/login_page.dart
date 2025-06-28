@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import '../services/api_service.dart';
 import '../services/auth_service.dart';
 
@@ -71,6 +72,7 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        toolbarHeight: 25,
         leading: const BackButton(color: Colors.black87),
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -80,18 +82,17 @@ class _LoginPageState extends State<LoginPage> {
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: Column(
           children: [
-            const SizedBox(height: 30),
-            const CircleAvatar(
-              radius: 50,
-              backgroundColor: Colors.deepPurple,
-              child: Icon(Icons.person, size: 60, color: Colors.white),
+            Lottie.asset(
+              'assets/animations/animation_user.json',
+              width: 300,
+              height: 300,
+              fit: BoxFit.fill,
             ),
-            const SizedBox(height: 16),
             const Text(
               'Faça Login para acessar sua conta:',
               style: TextStyle(color: Colors.grey, fontSize: 14),
             ),
-            const SizedBox(height: 30),
+            const SizedBox(height: 10),
 
             Form(
               key: _formKey,
@@ -192,7 +193,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: const Text(
                     'Crie uma conta!',
                     style: TextStyle(
-                      color: Colors.blueAccent,
+                      color: Colors.deepPurpleAccent,
                       fontWeight: FontWeight.w600,
                     ),
                   ),

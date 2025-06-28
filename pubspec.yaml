@@ -10,7 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  
+  lottie: ^2.0.0
   http: ^1.2.1 
 
   cupertino_icons: ^1.0.8
@@ -27,3 +27,5 @@ flutter:
 
   assets:
     - assets/logo.png
+    - assets/animations/animation_not_found.json
+    - assets/animations/animation_user.json

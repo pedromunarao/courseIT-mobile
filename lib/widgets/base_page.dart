@@ -5,12 +5,14 @@ class BasePage extends StatelessWidget {
   final String title;
   final Widget child;
   final int currentIndex;
+  final FloatingActionButton? floatingActionButton;
 
   const BasePage({
     super.key,
     required this.title,
     required this.child,
     this.currentIndex = 0,
+    this.floatingActionButton = null,
   });
 
   void _logout(BuildContext context) {
@@ -72,6 +74,7 @@ class BasePage extends StatelessWidget {
                 : [],
       ),
       body: child,
+      floatingActionButton: floatingActionButton,
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: currentIndex,
         selectedItemColor: theme.colorScheme.primary,

@@ -23,7 +23,7 @@ class _CreateCoursePageState extends State<CreateCoursePage> {
       final response = await ApiService.createCourse(
         titleController.text,
         descriptionController.text,
-        AuthService.user?['id'],
+        AuthService.user!['id'].toString(),
       );
 
       print(response);

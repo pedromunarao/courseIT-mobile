@@ -47,7 +47,7 @@ class _EnrollmentPageState extends State<EnrollmentPage> {
     try {
       final response = await ApiService.enrollUser(
         AuthService.user!['id'],
-        selectedCourseId!,
+        selectedCourseId!.toString(),
       );
 
       setState(

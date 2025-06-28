@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import '../services/api_service.dart';
 import '../widgets/base_page.dart';
 
 class CourseDetailsPage extends StatefulWidget {
-  final int courseId;
+  final String courseId;
 
   const CourseDetailsPage({super.key, required this.courseId});
 
@@ -47,7 +48,24 @@ class _CourseDetailsPageState extends State<CourseDetailsPage> {
           isLoading
               ? const Center(child: CircularProgressIndicator())
               : course == null
-              ? const Center(child: Text('Curso não encontrado.'))
+              ? Center(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Lottie.asset(
+                      'assets/animations/animation_not_found.json',
+                      width: 300,
+                      height: 300,
+                      fit: BoxFit.fill,
+                    ),
+                    const Text(
+                      'Curso não encontrado',
+                      style: TextStyle(fontSize: 25, color: Colors.deepPurple),
+                    ),
+                  ],
+                ),
+              )
               : Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(

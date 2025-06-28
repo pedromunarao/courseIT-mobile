@@ -1,5 +1,6 @@
 import 'package:courseit/services/auth_service.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import '../services/api_service.dart';
 import '../widgets/course_card.dart';
 import '../widgets/base_page.dart';
@@ -16,6 +17,7 @@ class _CoursesPageState extends State<CoursesPage> {
   List<dynamic> _filteredCourses = [];
   bool isLoading = true;
   String _searchQuery = '';
+  final isUserAdmin = AuthService.isUserAdmin;
 
   @override
   void initState() {
@@ -70,6 +72,14 @@ class _CoursesPageState extends State<CoursesPage> {
     return BasePage(
       title: 'Cursos',
       currentIndex: 1,
+      floatingActionButton:
+          isUserAdmin
+              ? FloatingActionButton(
+                onPressed:
+                    () => {Navigator.pushNamed(context, '/create-course')},
+                child: const Icon(Icons.add),
+              )
+              : null,
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -84,13 +94,24 @@ class _CoursesPageState extends State<CoursesPage> {
               ),
               onChanged: _searchCourses,
             ),
-            const SizedBox(height: 16),
             Expanded(
               child:
                   isLoading
                       ? const Center(child: CircularProgressIndicator())
                       : _filteredCourses.isEmpty
-                      ? const Center(child: Text('Nenhum curso encontrado.'))
+                      ? Center(
+                        child: Column(
+                          children: [
+                            Text('Nenhum curso encontrado.'),
+                            Lottie.asset(
+                              'assets/animations/animation_not_found.json',
+                              width: 300,
+                              height: 300,
+                              fit: BoxFit.fill,
+                            ),
+                          ],
+                        ),
+                      )
                       : ListView.separated(
                         itemCount: _filteredCourses.length,
                         separatorBuilder: (_, __) => const Divider(),

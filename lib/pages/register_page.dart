@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import '../services/api_service.dart';
 import '../services/auth_service.dart';
 
@@ -73,7 +74,7 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Criar Conta')),
+      appBar: AppBar(),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Form(
@@ -83,13 +84,15 @@ class _RegisterPageState extends State<RegisterPage> {
 
             child: Column(
               children: [
-                const Text(
-                  'Bem-vindo!',
-                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                Lottie.asset(
+                  'assets/animations/animation_user.json',
+                  width: 300,
+                  height: 300,
+                  fit: BoxFit.fill,
                 ),
                 const SizedBox(height: 10),
                 const Text(
-                  'Preencha os dados abaixo para criar sua conta.',
+                  'Preencha os dados e crie sua conta.',
                   style: TextStyle(fontSize: 16, color: Colors.black54),
                 ),
                 const SizedBox(height: 30),
@@ -151,32 +154,54 @@ class _RegisterPageState extends State<RegisterPage> {
                           return null;
                         },
                       ),
-                      const SizedBox(height: 30),
-                      SizedBox(
-                        width: double.infinity,
-                        height: 50,
-                        child: ElevatedButton(
-                          onPressed:
-                              isLoading
-                                  ? null
-                                  : () {
-                                    if (_formKey.currentState!.validate()) {
-                                      registerUser();
-                                    }
-                                  },
-                          child:
-                              isLoading
-                                  ? const CircularProgressIndicator(
-                                    color: Colors.white,
-                                  )
-                                  : const Text(
-                                    'Criar Conta',
-                                    style: TextStyle(fontSize: 18),
-                                  ),
-                        ),
-                      ),
                     ],
                   ),
+                ),
+                SizedBox(height: 30),
+                SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed:
+                        isLoading
+                            ? null
+                            : () {
+                              if (_formKey.currentState!.validate()) {
+                                registerUser();
+                              }
+                            },
+                    child:
+                        isLoading
+                            ? const CircularProgressIndicator(
+                              color: Colors.white,
+                            )
+                            : const Text(
+                              'Criar Conta',
+                              style: TextStyle(fontSize: 18),
+                            ),
+                  ),
+                ),
+                SizedBox(height: 40),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      "Já tem uma conta? ",
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(context, '/login');
+                      },
+                      child: const Text(
+                        'Faça Login!',
+                        style: TextStyle(
+                          color: Colors.deepPurpleAccent,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
