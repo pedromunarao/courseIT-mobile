@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class WelcomeScreen extends StatelessWidget {
-  const WelcomeScreen({super.key});
+class WelcomePage extends StatelessWidget {
+  const WelcomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,6 @@ class WelcomeScreen extends StatelessWidget {
               ),
               const SizedBox(height: 40),
 
-              // Botão Login
               SizedBox(
                 width: 200,
                 height: 45,
@@ -40,31 +39,27 @@ class WelcomeScreen extends StatelessWidget {
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.deepPurple,
-                    foregroundColor: Colors.white, // <-- garante visibilidade
+                    foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                  child: const Text(
-                    'Login',
-                    style: TextStyle(fontSize: 16),
-                  ),
+                  child: const Text('Login', style: TextStyle(fontSize: 16)),
                 ),
               ),
 
               const SizedBox(height: 15),
 
-              // Botão Create Account
               SizedBox(
                 width: 200,
                 height: 45,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, '/create');
+                    Navigator.pushNamed(context, '/register');
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.grey.shade300,
-                    foregroundColor: Colors.deepPurple, // texto roxo
+                    foregroundColor: Colors.deepPurple,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
