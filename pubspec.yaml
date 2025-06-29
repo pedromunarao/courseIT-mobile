@@ -29,3 +29,4 @@ flutter:
     - assets/logo.png
     - assets/animations/animation_not_found.json
     - assets/animations/animation_user.json
+    - assets/animations/animation_create_course.json

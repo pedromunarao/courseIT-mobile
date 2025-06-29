@@ -101,13 +101,21 @@ class _CoursesPageState extends State<CoursesPage> {
                       : _filteredCourses.isEmpty
                       ? Center(
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text('Nenhum curso encontrado.'),
                             Lottie.asset(
                               'assets/animations/animation_not_found.json',
                               width: 300,
                               height: 300,
                               fit: BoxFit.fill,
+                            ),
+                            const Text(
+                              'Nenhum curso encontrado.',
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Colors.deepPurple,
+                              ),
                             ),
                           ],
                         ),

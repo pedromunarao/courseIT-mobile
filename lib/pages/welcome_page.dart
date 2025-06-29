@@ -20,14 +20,15 @@ class WelcomePage extends StatelessWidget {
                   color: Colors.black87,
                 ),
               ),
+
+              const SizedBox(height: 45),
               Image.asset(
                 'assets/logo.png',
-                width: 300,
-                height: 300,
+                width: 200,
+                height: 200,
                 fit: BoxFit.contain,
               ),
-              const SizedBox(height: 40),
-
+              const SizedBox(height: 45),
               SizedBox(
                 width: 200,
                 height: 45,

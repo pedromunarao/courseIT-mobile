@@ -1,3 +1,4 @@
+import 'package:courseit/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import '../services/api_service.dart';
@@ -15,6 +16,7 @@ class CourseDetailsPage extends StatefulWidget {
 class _CourseDetailsPageState extends State<CourseDetailsPage> {
   Map<String, dynamic>? course;
   bool isLoading = true;
+  final isUserAdmin = AuthService.isUserAdmin;
 
   @override
   void initState() {
@@ -25,6 +27,7 @@ class _CourseDetailsPageState extends State<CourseDetailsPage> {
   Future<void> fetchCourseDetails() async {
     try {
       final data = await ApiService.getCourseById(widget.courseId);
+      print("data: $data");
       setState(() {
         course = data;
       });
@@ -44,76 +47,80 @@ class _CourseDetailsPageState extends State<CourseDetailsPage> {
     return BasePage(
       title: 'Detalhes do Curso',
       currentIndex: 1,
-      child:
-          isLoading
-              ? const Center(child: CircularProgressIndicator())
-              : course == null
+      floatingActionButton: isUserAdmin
+          ? FloatingActionButton(
+              onPressed: () => Navigator.pushNamed(context, '/create-module'),
+              child: const Icon(Icons.add),
+            )
+          : null,
+      child: isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : course == null
               ? Center(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Lottie.asset(
-                      'assets/animations/animation_not_found.json',
-                      width: 300,
-                      height: 300,
-                      fit: BoxFit.fill,
-                    ),
-                    const Text(
-                      'Curso não encontrado',
-                      style: TextStyle(fontSize: 25, color: Colors.deepPurple),
-                    ),
-                  ],
-                ),
-              )
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Lottie.asset(
+                        'assets/animations/animation_not_found.json',
+                        width: 300,
+                        height: 300,
+                        fit: BoxFit.fill,
+                      ),
+                      const Text(
+                        'Curso não encontrado',
+                        style: TextStyle(fontSize: 25, color: Colors.deepPurple),
+                      ),
+                    ],
+                  ),
+                )
               : Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      course!['title'] ?? '',
-                      style: const TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        course!['title'] ?? '',
+                        style: const TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      course!['description'] ?? '',
-                      style: const TextStyle(fontSize: 16),
-                    ),
-                    const SizedBox(height: 20),
-                    const Text(
-                      'Módulos:',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
+                      const SizedBox(height: 10),
+                      Text(
+                        course!['description'] ?? '',
+                        style: const TextStyle(fontSize: 16),
                       ),
-                    ),
-                    const SizedBox(height: 10),
-                    Expanded(
-                      child: ListView.separated(
-                        itemCount: (course!['modules'] as List).length,
-                        separatorBuilder: (_, __) => const Divider(),
-                        itemBuilder: (context, index) {
-                          final module = course!['modules'][index];
-                          return ListTile(
-                            title: Text(module['title']),
-                            onTap:
-                                () => Navigator.pushNamed(
-                                  context,
-                                  '/module-details',
-                                  arguments: module['id'],
-                                ),
-                            trailing: const Icon(Icons.chevron_right),
-                          );
-                        },
+                      const SizedBox(height: 20),
+                      const Text(
+                        'Módulos:',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: 10),
+                      Expanded(
+                        child: ListView.separated(
+                          itemCount: (course!['modules'] as List).length,
+                          separatorBuilder: (_, __) => const Divider(),
+                          itemBuilder: (context, index) {
+                            final module = course!['modules'][index];
+                            return ListTile(
+                              title: Text(module['title']),
+                              onTap: () => Navigator.pushNamed(
+                                context,
+                                '/module-details',
+                                arguments: module['id'],
+                              ),
+                              trailing: const Icon(Icons.chevron_right),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
     );
   }
 }

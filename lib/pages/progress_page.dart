@@ -2,6 +2,7 @@
 import 'package:courseit/services/auth_service.dart';
 import 'package:courseit/widgets/base_page.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import '../services/api_service.dart';
 
 class ProgressPage extends StatefulWidget {
@@ -44,7 +45,22 @@ class _ProgressPageState extends State<ProgressPage> {
           isLoading
               ? const Center(child: CircularProgressIndicator())
               : progressList.isEmpty
-              ? const Center(child: Text('Nenhum progresso encontrado.'))
+              ? Center(
+                child: Column(
+                  children: [
+                    const Text(
+                      'Nenhum progresso encontrado.',
+                      style: TextStyle(fontSize: 25, color: Colors.deepPurple),
+                    ),
+                    Lottie.asset(
+                      'assets/animations/animation_not_found.json',
+                      width: 300,
+                      height: 300,
+                      fit: BoxFit.fill,
+                    ),
+                  ],
+                ),
+              )
               : ListView.separated(
                 padding: const EdgeInsets.all(16),
                 itemCount: progressList.length,

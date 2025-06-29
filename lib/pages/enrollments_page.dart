@@ -1,5 +1,6 @@
 // lib/pages/enrollments_page.dart
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import '../services/api_service.dart';
 
 class EnrollmentsPage extends StatefulWidget {
@@ -41,7 +42,22 @@ class _EnrollmentsPageState extends State<EnrollmentsPage> {
           isLoading
               ? const Center(child: CircularProgressIndicator())
               : enrollments.isEmpty
-              ? const Center(child: Text('Nenhuma matrícula encontrada.'))
+              ? Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Lottie.asset(
+                    'assets/animations/animation_not_found.json',
+                    width: 300,
+                    height: 300,
+                    fit: BoxFit.fill,
+                  ),
+                  const Text(
+                    'Nenhuma matrícula encontrada.',
+                    style: TextStyle(fontSize: 20, color: Colors.deepPurple),
+                  ),
+                ],
+              )
               : ListView.separated(
                 padding: const EdgeInsets.all(16),
                 itemCount: enrollments.length,

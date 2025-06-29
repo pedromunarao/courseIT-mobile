@@ -3,29 +3,46 @@ import 'package:lottie/lottie.dart';
 import '../services/api_service.dart';
 import '../services/auth_service.dart';
 
-class CreateCoursePage extends StatefulWidget {
-  const CreateCoursePage({super.key});
+class CreateEditModulePage extends StatefulWidget {
+  final String? moduleId; // Se for nulo, estamos criando um novo módulo
+  final String? currentTitle; // O título atual para edição
+
+  const CreateEditModulePage({super.key, this.moduleId, this.currentTitle});
+
   @override
-  State<CreateCoursePage> createState() => _CreateCoursePageState();
+  State<CreateEditModulePage> createState() => _CreateEditModulePageState();
 }
 
-class _CreateCoursePageState extends State<CreateCoursePage> {
+class _CreateEditModulePageState extends State<CreateEditModulePage> {
   final titleController = TextEditingController();
-  final descriptionController = TextEditingController();
   String? errorMessage;
   bool loading = false;
 
-  Future<void> createCourse() async {
+  @override
+  void initState() {
+    super.initState();
+    // Se estamos editando, preenche o título com o valor atual
+    if (widget.moduleId != null && widget.currentTitle != null) {
+      titleController.text = widget.currentTitle!;
+    }
+  }
+
+  Future<void> saveModule() async {
     setState(() {
       loading = true;
       errorMessage = null;
     });
+
     try {
-      final response = await ApiService.createCourse(
-        titleController.text,
-        descriptionController.text,
-        AuthService.user!['id'].toString(),
-      );
+      final response = widget.moduleId == null
+          ? await ApiService.createModule(
+              titleController.text,
+              AuthService.user!['id'].toString(),
+            )
+          : await ApiService.updateModule(
+              widget.moduleId!,
+              titleController.text,
+            );
 
       print(response);
 
@@ -40,13 +57,13 @@ class _CreateCoursePageState extends State<CreateCoursePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Criar Curso')),
+      appBar: AppBar(title: Text(widget.moduleId == null ? 'Criar Módulo' : 'Editar Módulo')),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
             Lottie.asset(
-              'assets/animations/animation_create_course.json',
+              'assets/animations/animation_create_module.json', // Animacao para criação de módulo
               height: 200,
               fit: BoxFit.fill,
             ),
@@ -58,26 +75,21 @@ class _CreateCoursePageState extends State<CreateCoursePage> {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: const Text(
-                'Crie seu curso com todas as informações e esteja pronto para ensinar.',
+                'Preencha as informações do módulo e seja capaz de ensinar de forma eficaz.',
                 style: TextStyle(fontSize: 16, color: Colors.black87),
                 textAlign: TextAlign.center,
               ),
             ),
             TextField(
               controller: titleController,
-              decoration: const InputDecoration(labelText: 'Título'),
-            ),
-            TextField(
-              controller: descriptionController,
-              decoration: const InputDecoration(labelText: 'Descrição'),
+              decoration: const InputDecoration(labelText: 'Título do Módulo'),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: loading ? null : createCourse,
-              child:
-                  loading
-                      ? const CircularProgressIndicator(color: Colors.white)
-                      : const Text('Criar'),
+              onPressed: loading ? null : saveModule,
+              child: loading
+                  ? const CircularProgressIndicator(color: Colors.white)
+                  : Text(widget.moduleId == null ? 'Criar Módulo' : 'Salvar Módulo'),
             ),
             if (errorMessage != null) ...[
               const SizedBox(height: 10),
