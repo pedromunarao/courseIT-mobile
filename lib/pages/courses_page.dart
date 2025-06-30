@@ -33,11 +33,20 @@ class _CoursesPageState extends State<CoursesPage> {
 
   Future<void> loadCourses() async {
     try {
-      final data = await ApiService.getAllCourses();
-      print("AQUII  $data");
+      final response = await ApiService.getAllCourses();
+      final filteredData =
+          isUserAdmin
+              ? response
+                  .where(
+                    (course) =>
+                        course['author']['id'] == AuthService.user!['id'],
+                  )
+                  .toList()
+              : response;
+
       setState(() {
-        _courses = data;
-        _filteredCourses = data;
+        _courses = filteredData;
+        _filteredCourses = filteredData;
       });
     } catch (e) {
       print("error: $e");

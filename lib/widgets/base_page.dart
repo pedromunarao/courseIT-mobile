@@ -12,7 +12,7 @@ class BasePage extends StatelessWidget {
     required this.title,
     required this.child,
     this.currentIndex = 0,
-    this.floatingActionButton = null,
+    this.floatingActionButton,
   });
 
   void _logout(BuildContext context) {

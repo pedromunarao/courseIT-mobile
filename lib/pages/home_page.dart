@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import '../services/api_service.dart';
 import '../widgets/base_page.dart';
+import '../widgets/course_home_card.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -15,10 +16,9 @@ class _HomePageState extends State<HomePage> {
   List<dynamic> courses = [];
   bool loading = true;
 
-  Future<void> fetchCurrentUser() async {
-    final res = await ApiService.getCurrentUser();
-    print("MEU USER: $res");
-  }
+  List<dynamic> featuredCourses = [];
+  List<dynamic> recommendedCourses = [];
+  List<dynamic> newCourses = [];
 
   @override
   void initState() {
@@ -35,12 +35,25 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  Future<void> fetchCurrentUser() async {
+    final res = await ApiService.getCurrentUser();
+    print("MEU USER: $res");
+  }
+
   Future<void> loadCourses() async {
     try {
       final data = await ApiService.getAllCourses();
+
+      // Distribui os cursos entre as seções
+      final first2 = data.take(2).toList();
+      final next2 = data.skip(2).take(2).toList();
+      final next2Again = data.skip(4).take(2).toList();
+
       setState(() {
-        // Mostra só os 5 primeiros cursos
-        courses = data.take(5).toList();
+        courses = data;
+        featuredCourses = first2;
+        recommendedCourses = next2;
+        newCourses = next2Again;
       });
     } catch (e) {
       ScaffoldMessenger.of(
@@ -63,12 +76,10 @@ class _HomePageState extends State<HomePage> {
                 ? const Center(child: CircularProgressIndicator())
                 : courses.isEmpty
                 ? Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Lottie.asset(
                       'assets/animations/animation_not_found.json',
-                      width: 300,
                       height: 300,
                       fit: BoxFit.fill,
                     ),
@@ -81,245 +92,52 @@ class _HomePageState extends State<HomePage> {
                 : SingleChildScrollView(
                   child: Column(
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Cursos em Destaque',
-                            style: TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                          SizedBox(
-                            height: 160,
-                            child: ListView.separated(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: courses.length,
-                              separatorBuilder:
-                                  (_, __) => const SizedBox(width: 16),
-                              itemBuilder: (context, index) {
-                                final course = courses[index];
-                                return GestureDetector(
-                                  onTap: () {
-                                    Navigator.pushNamed(
-                                      context,
-                                      '/course-details',
-                                      arguments: course['id'],
-                                    );
-                                  },
-                                  child: Container(
-                                    width: 200,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(12),
-                                      color: Colors.grey.shade100,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black.withOpacity(0.1),
-                                          blurRadius: 4,
-                                          offset: const Offset(2, 2),
-                                        ),
-                                      ],
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        ClipRRect(
-                                          borderRadius:
-                                              const BorderRadius.vertical(
-                                                top: Radius.circular(12),
-                                              ),
-                                          child: Image.asset(
-                                            'assets/logo.png',
-                                            height: 100,
-                                            width: double.infinity,
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Text(
-                                            course['title'] ?? '',
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: const TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Recomendados',
-                            style: TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                          SizedBox(
-                            height: 160,
-                            child: ListView.separated(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: courses.length,
-                              separatorBuilder:
-                                  (_, __) => const SizedBox(width: 16),
-                              itemBuilder: (context, index) {
-                                final course = courses[index];
-                                return GestureDetector(
-                                  onTap: () {
-                                    Navigator.pushNamed(
-                                      context,
-                                      '/course-details',
-                                      arguments: course['id'],
-                                    );
-                                  },
-                                  child: Container(
-                                    width: 200,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(12),
-                                      color: Colors.grey.shade100,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black.withOpacity(0.1),
-                                          blurRadius: 4,
-                                          offset: const Offset(2, 2),
-                                        ),
-                                      ],
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        ClipRRect(
-                                          borderRadius:
-                                              const BorderRadius.vertical(
-                                                top: Radius.circular(12),
-                                              ),
-                                          child: Image.asset(
-                                            'assets/logo.png',
-                                            height: 100,
-                                            width: double.infinity,
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Text(
-                                            course['title'] ?? '',
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: const TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-
-                        children: [
-                          const Text(
-                            'Lançamentos',
-                            style: TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                          SizedBox(
-                            height: 160,
-                            child: ListView.separated(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: courses.length,
-                              separatorBuilder:
-                                  (_, __) => const SizedBox(width: 16),
-                              itemBuilder: (context, index) {
-                                final course = courses[index];
-                                return GestureDetector(
-                                  onTap: () {
-                                    Navigator.pushNamed(
-                                      context,
-                                      '/course-details',
-                                      arguments: course['id'],
-                                    );
-                                  },
-                                  child: Container(
-                                    width: 200,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(12),
-                                      color: Colors.grey.shade100,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black.withOpacity(0.1),
-                                          blurRadius: 4,
-                                          offset: const Offset(2, 2),
-                                        ),
-                                      ],
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        ClipRRect(
-                                          borderRadius:
-                                              const BorderRadius.vertical(
-                                                top: Radius.circular(12),
-                                              ),
-                                          child: Image.asset(
-                                            'assets/logo.png',
-                                            height: 100,
-                                            width: double.infinity,
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Text(
-                                            course['title'] ?? '',
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: const TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
+                      buildSection('Cursos em Destaque', featuredCourses),
+                      buildSection('Recomendados', recommendedCourses),
+                      buildSection('Lançamentos', newCourses),
                     ],
                   ),
                 ),
       ),
+    );
+  }
+
+  Widget buildSection(String title, List<dynamic> sectionCourses) {
+    if (sectionCourses.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 24),
+        Text(
+          title,
+          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 16),
+        SizedBox(
+          height: 160,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            itemCount: sectionCourses.length,
+            separatorBuilder: (_, __) => const SizedBox(width: 16),
+            itemBuilder: (context, index) {
+              final course = sectionCourses[index];
+              return CourseHomeCard(
+                course: course,
+                onTap: () {
+                  Navigator.pushNamed(
+                    context,
+                    '/course-details',
+                    arguments: course['id'],
+                  );
+                },
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 }

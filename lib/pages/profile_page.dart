@@ -76,7 +76,6 @@ class _ProfilePageState extends State<ProfilePage> {
                     Lottie.asset(
                       'assets/animations/animation_user.json',
                       width: 300,
-                      height: 300,
                       fit: BoxFit.fill,
                     ),
                     Card(
@@ -137,18 +136,48 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     const SizedBox(height: 24),
 
-                    // Espaço visual preenchido
-                    Container(
+                    SizedBox(
                       width: double.infinity,
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Colors.deepPurple.withOpacity(0.05),
-                        borderRadius: BorderRadius.circular(12),
+                      child: ElevatedButton.icon(
+                        icon: const Icon(Icons.list_alt),
+                        label: const Text('Meus Cursos'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.deepPurple,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          textStyle: const TextStyle(fontSize: 16),
+                        ),
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/my-courses');
+                        },
                       ),
-                      child: const Text(
-                        'Bem-vindo ao seu perfil!\nAqui você poderá visualizar suas informações.',
-                        style: TextStyle(fontSize: 16, color: Colors.black87),
-                        textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 24),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        icon: const Icon(Icons.list_alt),
+                        label: const Text('Deletar Conta'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          textStyle: const TextStyle(fontSize: 16),
+                        ),
+                        onPressed: () async {
+                          try {
+                            final response = await ApiService.deleteUser();
+                            print("User deleted: $response");
+
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Usuário deletado com sucesso!'),
+                                backgroundColor: Colors.green,
+                              ),
+                            );
+                          } catch (e) {
+                            print("Erro ao deletar usuário: $e");
+                          }
+                          Navigator.pushReplacementNamed(context, '/login');
+                        },
                       ),
                     ),
                   ],

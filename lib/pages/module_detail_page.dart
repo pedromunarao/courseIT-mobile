@@ -4,7 +4,7 @@ import '../services/api_service.dart';
 import '../widgets/base_page.dart';
 
 class ModuleDetailsPage extends StatefulWidget {
-  final int moduleId;
+  final String moduleId;
   const ModuleDetailsPage({super.key, required this.moduleId});
 
   @override
@@ -23,7 +23,7 @@ class _ModuleDetailsPageState extends State<ModuleDetailsPage> {
 
   Future<void> fetchModuleDetails() async {
     try {
-      final data = await ApiService.getModuleById(widget.moduleId.toString());
+      final data = await ApiService.getModuleById(widget.moduleId);
       setState(() {
         module = data;
       });
@@ -47,67 +47,75 @@ class _ModuleDetailsPageState extends State<ModuleDetailsPage> {
     return BasePage(
       title: 'Detalhes do Módulo',
       currentIndex: 1,
-      child:
-          isLoading
-              ? const Center(child: CircularProgressIndicator())
-              : module == null
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => Navigator.pushNamed(context, '/create-lessons'),
+        child: const Icon(Icons.add),
+      ),
+      child: isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : module == null
               ? Center(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Lottie.asset(
-                      'assets/animations/animation_not_found.json',
-                      width: 300,
-                      height: 300,
-                      fit: BoxFit.fill,
-                    ),
-                    const Text(
-                      'Módulo não encontrado',
-                      style: TextStyle(fontSize: 25, color: Colors.deepPurple),
-                    ),
-                  ],
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Lottie.asset(
+                        'assets/animations/animation_not_found.json',
+                        width: 300,
+                        height: 300,
+                        fit: BoxFit.fill,
+                      ),
+                      const Text(
+                        'Módulo não encontrado',
+                        style: TextStyle(
+                            fontSize: 25, color: Colors.deepPurple),
+                      ),
+                    ],
+                  ),
+                )
+              : SingleChildScrollView(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        module!['title'] ?? '',
+                        style: const TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      const Text(
+                        'Aulas:',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      if ((module!['lessons'] as List).isEmpty)
+                        const Text('Nenhuma aula cadastrada.')
+                      else
+                        ListView.separated(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: (module!['lessons'] as List).length,
+                          separatorBuilder: (_, __) => const Divider(),
+                          itemBuilder: (context, index) {
+                            final lesson = module!['lessons'][index];
+                            return ListTile(
+                              title: Text(lesson['title']),
+                              subtitle:
+                                  Text(lesson['type'] ?? 'Conteúdo'),
+                              onTap: () => _openLesson(lesson['id']),
+                              trailing: const Icon(Icons.chevron_right),
+                            );
+                          },
+                        ),
+                    ],
+                  ),
                 ),
-              )
-              : Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      module!['title'] ?? '',
-                      style: const TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    const Text(
-                      'Aulas:',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    Expanded(
-                      child: ListView.separated(
-                        itemCount: (module!['lessons'] as List).length,
-                        separatorBuilder: (_, __) => const Divider(),
-                        itemBuilder: (context, index) {
-                          final lesson = module!['lessons'][index];
-                          return ListTile(
-                            title: Text(lesson['title']),
-                            subtitle: Text(lesson['type'] ?? 'conteúdo'),
-                            onTap: () => _openLesson(lesson['id']),
-                            trailing: const Icon(Icons.chevron_right),
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
     );
   }
 }

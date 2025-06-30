@@ -3,6 +3,7 @@ import 'package:courseit/services/routes.dart';
 import 'package:flutter/material.dart';
 import 'theme/app_theme.dart';
 
+
 void main() {
   runApp(MyApp());
 }
@@ -18,7 +19,8 @@ class MyApp extends StatelessWidget {
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: ThemeMode.system,
-      initialRoute: loggedIn ? '/home' : '/',
+      initialRoute:
+          loggedIn ? (AuthService.isUserAdmin ? '/home' : '/courses') : '/',
       onGenerateRoute: generateRoute,
     );
   }

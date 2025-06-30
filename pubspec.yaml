@@ -12,6 +12,11 @@ dependencies:
     sdk: flutter
   lottie: ^2.0.0
   http: ^1.2.1 
+  geolocator: ^11.0.0
+  camera: ^0.10.5+9
+  path_provider: ^2.1.2
+  image_picker: ^1.1.0
+  video_player: ^2.7.0
 
   cupertino_icons: ^1.0.8
 
@@ -30,3 +35,4 @@ flutter:
     - assets/animations/animation_not_found.json
     - assets/animations/animation_user.json
     - assets/animations/animation_create_course.json
+    - assets/animations/animation_location.json

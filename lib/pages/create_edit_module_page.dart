@@ -34,15 +34,16 @@ class _CreateEditModulePageState extends State<CreateEditModulePage> {
     });
 
     try {
-      final response = widget.moduleId == null
-          ? await ApiService.createModule(
-              titleController.text,
-              AuthService.user!['id'].toString(),
-            )
-          : await ApiService.updateModule(
-              widget.moduleId!,
-              titleController.text,
-            );
+      final response =
+          widget.moduleId == null
+              ? await ApiService.createModule(
+                titleController.text,
+                AuthService.user!['id'].toString(),
+              )
+              : await ApiService.updateModule(
+                widget.moduleId!,
+                titleController.text,
+              );
 
       print(response);
 
@@ -57,13 +58,15 @@ class _CreateEditModulePageState extends State<CreateEditModulePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget.moduleId == null ? 'Criar Módulo' : 'Editar Módulo')),
+      appBar: AppBar(
+        title: Text(widget.moduleId == null ? 'Criar Módulo' : 'Editar Módulo'),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
             Lottie.asset(
-              'assets/animations/animation_create_module.json', // Animacao para criação de módulo
+              'assets/animations/animation_create_course.json', // Animacao para criação de módulo
               height: 200,
               fit: BoxFit.fill,
             ),
@@ -87,9 +90,14 @@ class _CreateEditModulePageState extends State<CreateEditModulePage> {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: loading ? null : saveModule,
-              child: loading
-                  ? const CircularProgressIndicator(color: Colors.white)
-                  : Text(widget.moduleId == null ? 'Criar Módulo' : 'Salvar Módulo'),
+              child:
+                  loading
+                      ? const CircularProgressIndicator(color: Colors.white)
+                      : Text(
+                        widget.moduleId == null
+                            ? 'Criar Módulo'
+                            : 'Salvar Módulo',
+                      ),
             ),
             if (errorMessage != null) ...[
               const SizedBox(height: 10),
